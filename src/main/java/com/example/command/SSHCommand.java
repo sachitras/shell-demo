@@ -10,7 +10,6 @@ import com.example.dto.*;
 import com.example.service.SpringShellService;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.shell.Availability;
-import org.springframework.shell.Bootstrap;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
@@ -163,6 +162,21 @@ public class SSHCommand implements CommandMarker {
 //	public Availability createProductAvailability() {
 //		return tenantCreated ? Availability.available() : Availability.unavailable("Please create a tenant first.");
 //	}
+
+
+	@CliCommand(value = { "show-capabilities"}, help = "Shows the list of capabilities")
+	public void addCap() {
+
+		StringBuffer buff = new StringBuffer();
+		buff.append("ACCNT");
+		buff.append("\nLENDING");
+		buff.append("\nPOSTING");
+
+		LOGGER.info(buff.toString());
+
+	}
+
+
 
 	/****************** Private methods *************************/
 
