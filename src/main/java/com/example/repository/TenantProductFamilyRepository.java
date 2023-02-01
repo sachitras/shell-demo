@@ -1,9 +1,9 @@
 package com.example.repository;
 
-import com.example.domain.CommandEventLogDomain;
+import com.example.domain.TenantProductFamilyDomain;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SpringShellRepository  extends JpaRepository<CommandEventLogDomain, Long> {
+public interface TenantProductFamilyRepository extends JpaRepository<TenantProductFamilyDomain, Integer> {
 }

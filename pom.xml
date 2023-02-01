@@ -52,6 +52,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-client</artifactId>
+            <version>6.1.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -70,5 +75,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>

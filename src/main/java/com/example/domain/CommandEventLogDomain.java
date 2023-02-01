@@ -4,12 +4,11 @@ import lombok.Data;
 
 import javax.persistence.*;
 
-@Data
 @Entity
 @Table(name = "SHELL_COMMAND_EVENT_LOG")
 public class CommandEventLogDomain {
 
-    private int id;
+    private long id;
     private String commandName;
     private String commandValue;
     private String executedDate;
@@ -23,14 +22,14 @@ public class CommandEventLogDomain {
     @Column(name = "ID", nullable = false, insertable = true, updatable = true, length = 50, precision = 0)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SHELL_COMMAND_EVENT_LOG_SEQUENCE")
     @SequenceGenerator(name = "SHELL_COMMAND_EVENT_LOG_SEQUENCE", sequenceName = "SHELL_COMMAND_EVENT_LOG_SEQUENCE", allocationSize = 1, initialValue = 1)
-    public int getId() {
+    public long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
