@@ -2,17 +2,21 @@ package com.example.service.impl;
 
 import com.example.domain.*;
 import com.example.dto.*;
+import com.example.fto.ProductFamilyCapabilityFTO;
 import com.example.remote.CreateProductFamilyRequest;
 import com.example.remote.CreateProductFamilyResponse;
 import com.example.remote.RemoteWebClient;
 import com.example.repository.*;
 import com.example.service.SpringShellService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -37,6 +41,19 @@ public class SpringShellServiceImpl implements SpringShellService {
 
     @Autowired
     private ResourceBundleRepository resourceBundleRepository;
+
+    @Autowired
+    private ProductCapabilityRepository capabilityRepository;
+
+    @Autowired
+    private ProductFamilyEnvRepository productFamilyEnvRepository;
+
+    @Autowired
+    private ProductFamilyCapabilityRepository productFamilyCapabilityRepository;
+
+    @Autowired
+    private ProductCapabilityConfigRepository productCapabilityConfigRepository;
+
 
     @Override
     public boolean saveCommandEventLog(CommandEventLogDTO dto) {
@@ -83,8 +100,20 @@ public class SpringShellServiceImpl implements SpringShellService {
     }
 
     @Override
+    public TenantDTO getTenantById(String id) {
+        TenantDomain domain = tenantRepository.findByTenantId(id);
+        return convertTenantDomainToDTO(domain);
+    }
+
+    @Override
     public ProductFamilyDTO getProductFamilyByName(String name) {
         ProductFamilyDomain domain = productFamilyRepository.findByProductFamilyName(name);
+        return convertProductFamilyDomainToDTO(domain);
+    }
+
+    @Override
+    public ProductFamilyDTO getProductFamilyById(String id) {
+        ProductFamilyDomain domain = productFamilyRepository.findByProductFamilyId(id);
         return convertProductFamilyDomainToDTO(domain);
     }
 
@@ -126,6 +155,112 @@ public class SpringShellServiceImpl implements SpringShellService {
         return convertResourceBundleDomainToDTO(domain);
     }
 
+    @Override
+    public ProductCapabilityDTO getProductCapabilityByName(String capabilityName) {
+        ProductCapabilityDomain domain = capabilityRepository.findByCapabilityName(capabilityName);
+        return convertProductCapabilityDomainToDTO(domain);
+    }
+
+    @Override
+    public boolean saveProductFamilyCapability(ProductFamilyCapabilityDTO dto) {
+        ProductFamilyCapabilityDomain domain = convertProductFamilyCapabilityDTOToDomain(dto);
+       ProductFamilyCapabilityDomain savedDomain = productFamilyCapabilityRepository.save(domain);
+       if (savedDomain != null) {
+           return true;
+       }
+       return false;
+    }
+
+    @Override
+    public boolean saveProductFamilyEnv(ProductFamilyEnvDTO dto) {
+        ProductFamilyEnvDomain domain = convertProductFamilyEnvDTOToDomain(dto);
+        ProductFamilyEnvDomain savedDomain = productFamilyEnvRepository.save(domain);
+        if (savedDomain != null) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean saveProductCapabilityConfig(ProductCapabilityConfigDTO dto) {
+        ProductCapabilityConfigDomain domain = convertProductCapabilityConfigDTOToDomain(dto);
+        ProductCapabilityConfigDomain savedDomain = productCapabilityConfigRepository.save(domain);
+        if (savedDomain != null) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<TenantDTO> getAllTenants() {
+        List<TenantDTO> tenantDTOList = new ArrayList<>();
+        List<TenantDomain> tenantDomainList = tenantRepository.findAll();
+        if (tenantDomainList != null) {
+            for (TenantDomain domain : tenantDomainList) {
+                TenantDTO dto = convertTenantDomainToDTO(domain);
+                tenantDTOList.add(dto);
+            }
+
+            return tenantDTOList;
+        }
+        return null;
+    }
+
+    @Override
+    public List<ProductFamilyDTO> getProductFamilyByTenantId(String tenantId) {
+        if (tenantId != null) {
+            List<ProductFamilyDomain> domainList = productFamilyRepository.findByTenantId(tenantId);
+            if (domainList != null) {
+                List<ProductFamilyDTO> dtoList = new ArrayList<>();
+                for (ProductFamilyDomain domain : domainList) {
+                    dtoList.add(convertProductFamilyDomainToDTO(domain));
+                }
+                return dtoList;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<ProductCapabilityDTO> getAllCapabilities() {
+        List<ProductCapabilityDTO> dtoList = new ArrayList<>();
+        List<ProductCapabilityDomain> domainList = capabilityRepository.findAll();
+        if (domainList != null) {
+            for (ProductCapabilityDomain domain : domainList) {
+                ProductCapabilityDTO dto = new ProductCapabilityDTO();
+                dto.setCapabilityName(domain.getCapabilityName());
+                dto.setCapabilityId(domain.getCapabilityId());
+                dto.setRepoURL(domain.getRepoURL());
+                dtoList.add(dto);
+            }
+            return dtoList;
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<ProductFamilyCapabilityDTO> getProductFamilyCapabilities(String capabilityName) {
+        if (capabilityName != null) {
+            List<ProductFamilyCapabilityDomain> domainList = productFamilyCapabilityRepository.findByCapabilityName(capabilityName);
+            if (domainList != null) {
+                List<ProductFamilyCapabilityDTO> dtoList = new ArrayList<>();
+                for (ProductFamilyCapabilityDomain domain : domainList) {
+                    ProductFamilyCapabilityDTO dto = new ProductFamilyCapabilityDTO();
+                    dto.setId(domain.getId());
+                    dto.setProductFamilyId(domain.getProductFamilyId());
+                    dto.setCapabilityName(domain.getCapabilityName());
+                    dto.setRepoURL(domain.getRepoURL());
+                    dtoList.add(dto);
+                }
+                return dtoList;
+
+            }
+
+        }
+        return null;
+    }
+
 
     /****************** Private methods *************************/
 
@@ -142,7 +277,7 @@ public class SpringShellServiceImpl implements SpringShellService {
 
     private TenantDomain convertTenantDTOToDomain(TenantDTO dto) {
         TenantDomain domain = new TenantDomain();
-        domain.setId(dto.getId());
+        domain.setTenantId(dto.getId());
         domain.setTenantName(dto.getTenantName());
         domain.setCreatedDate(dto.getCreatedDate());
 
@@ -151,8 +286,10 @@ public class SpringShellServiceImpl implements SpringShellService {
 
     private ProductFamilyDomain convertProductFamilyDTOToDomain(ProductFamilyDTO dto) {
         ProductFamilyDomain domain = new ProductFamilyDomain();
-        domain.setId(dto.getId());
+        domain.setProductFamilyId(dto.getId());
         domain.setProductFamilyName(dto.getProductFamilyName());
+        domain.setTenantId(dto.getTenantId());
+        domain.setSmartContractName(dto.getSmartContractName());
         domain.setCreatedDate(dto.getCreatedDate());
 
         return domain;
@@ -166,7 +303,7 @@ public class SpringShellServiceImpl implements SpringShellService {
     private TenantDTO convertTenantDomainToDTO(TenantDomain domain) {
         if (domain != null) {
             TenantDTO dto = new TenantDTO();
-            dto.setId(domain.getId());
+            dto.setId(domain.getTenantId());
             dto.setTenantName(domain.getTenantName());
             dto.setCreatedDate(domain.getCreatedDate());
 
@@ -179,8 +316,10 @@ public class SpringShellServiceImpl implements SpringShellService {
     private ProductFamilyDTO convertProductFamilyDomainToDTO(ProductFamilyDomain domain) {
         if (domain != null) {
             ProductFamilyDTO dto = new ProductFamilyDTO();
-            dto.setId(domain.getId());
+            dto.setId(domain.getProductFamilyId());
             dto.setProductFamilyName(domain.getProductFamilyName());
+            dto.setTenantId(domain.getTenantId());
+            dto.setSmartContractName(domain.getSmartContractName());
             dto.setCreatedDate(domain.getCreatedDate());
 
             return dto;
@@ -225,6 +364,58 @@ public class SpringShellServiceImpl implements SpringShellService {
             dto.setCreatedDate(domain.getCreatedDate());
 
             return dto;
+        }
+        return null;
+    }
+
+    private ProductCapabilityDTO convertProductCapabilityDomainToDTO(ProductCapabilityDomain domain) {
+        if (domain != null) {
+            ProductCapabilityDTO dto = new ProductCapabilityDTO();
+            dto.setCapabilityId(domain.getCapabilityId());
+            dto.setCapabilityName(domain.getCapabilityName());
+            dto.setRepoURL(domain.getRepoURL());
+            return dto;
+        }
+        return null;
+    }
+
+    private ProductFamilyCapabilityDomain convertProductFamilyCapabilityDTOToDomain(ProductFamilyCapabilityDTO dto) {
+        if (dto != null) {
+            ProductFamilyCapabilityDomain domain = new ProductFamilyCapabilityDomain();
+            domain.setId(dto.getId());
+            domain.setCapabilityName(dto.getCapabilityName());
+            domain.setProductFamilyId(dto.getProductFamilyId());
+            domain.setRepoURL(dto.getRepoURL());
+            domain.setCreatedDate(dto.getCreatedDate());
+            return domain;
+        }
+        return null;
+    }
+
+    private ProductFamilyEnvDomain convertProductFamilyEnvDTOToDomain(ProductFamilyEnvDTO dto) {
+        if (dto != null) {
+            ProductFamilyEnvDomain domain = new ProductFamilyEnvDomain();
+            domain.setId(dto.getId());
+            domain.setProductFamilyId(dto.getProductFamilyId());
+            domain.setEnvName(dto.getEnvName());
+            domain.setCreatedDate(dto.getCreatedDate());
+            return domain;
+        }
+        return null;
+    }
+
+    private ProductCapabilityConfigDomain convertProductCapabilityConfigDTOToDomain(ProductCapabilityConfigDTO dto) {
+        if (dto != null) {
+            ProductCapabilityConfigDomain domain = new ProductCapabilityConfigDomain();
+            domain.setId(dto.getId());
+            domain.setCapabilityName(dto.getCapabilityName());
+            domain.setProductFamilyId(dto.getProductFamilyId());
+            domain.setExtensionType(dto.getExtensionType());
+            domain.setExtURL(dto.getExtURL());
+            domain.setCreatedDate(dto.getCreatedDate());
+
+            return domain;
+
         }
         return null;
     }

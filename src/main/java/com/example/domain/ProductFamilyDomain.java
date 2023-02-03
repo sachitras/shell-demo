@@ -7,20 +7,21 @@ import java.util.Date;
 @Table(name = "PRODUCT_FAMILY")
 public class ProductFamilyDomain {
 
-    private int id;
+    private String productFamilyId;
     private String productFamilyName;
+
+    private String tenantId;
+    private String smartContractName;
     private Date createdDate;
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = true, length = 50, precision = 0)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRODUCT_FAMILY_SEQUENCE")
-    @SequenceGenerator(name = "PRODUCT_FAMILY_SEQUENCE", sequenceName = "PRODUCT_FAMILY_SEQUENCE", allocationSize = 1, initialValue = 1)
-    public int getId() {
-        return id;
+    public String getProductFamilyId() {
+        return productFamilyId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setProductFamilyId(String id) {
+        this.productFamilyId = id;
     }
 
     @Column(name = "PRODUCT_FAMILY_NAME", nullable = false, insertable = true, updatable = true, length = 50, precision = 0)
@@ -39,5 +40,23 @@ public class ProductFamilyDomain {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    @Column(name = "TENANT_ID", nullable = false, insertable = true, updatable = true, precision = 0)
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    @Column(name = "SMART_CONTRACT_NAME", nullable = false, insertable = true, updatable = true, precision = 0)
+    public String getSmartContractName() {
+        return smartContractName;
+    }
+
+    public void setSmartContractName(String smartContractName) {
+        this.smartContractName = smartContractName;
     }
 }

@@ -5,10 +5,10 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class TenantDTO {
+public class ProductFamilyEnvDTO {
 
     private String id;
-    private String tenantName;
+    private String productFamilyId;
+    private String envName;
     private Date createdDate;
-
 }

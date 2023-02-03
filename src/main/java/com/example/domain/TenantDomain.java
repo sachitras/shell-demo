@@ -7,20 +7,18 @@ import java.util.Date;
 @Table(name = "TENANT")
 public class TenantDomain {
 
-    private int id;
+    private String tenantId;
     private String tenantName;
     private Date createdDate;
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = true, length = 50, precision = 0)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TENANT_SEQUENCE")
-    @SequenceGenerator(name = "TENANT_SEQUENCE", sequenceName = "TENANT_SEQUENCE", allocationSize = 1, initialValue = 1)
-    public int getId() {
-        return id;
+    public String getTenantId() {
+        return tenantId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setTenantId(String id) {
+        this.tenantId = id;
     }
     @Column(name = "TENANT_NAME", nullable = false, insertable = true, updatable = true, length = 50, precision = 0)
     public String getTenantName() {

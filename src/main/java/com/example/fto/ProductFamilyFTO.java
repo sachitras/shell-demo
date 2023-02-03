@@ -1,15 +1,14 @@
-package com.example.dto;
+package com.example.fto;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
-public class ProductFamilyDTO {
+public class ProductFamilyFTO {
 
     private String id;
     private String productFamilyName;
     private String tenantId;
     private String smartContractName;
-    private Date createdDate;
+
+
 }
