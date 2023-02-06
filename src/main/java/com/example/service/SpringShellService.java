@@ -48,4 +48,9 @@ public interface SpringShellService {
     public List<ProductCapabilityDTO> getAllCapabilities();
 
     public List<ProductFamilyCapabilityDTO> getProductFamilyCapabilities(String capabilityName);
+    public List<ProductFamilyCapabilityDTO> getProductFamilyCapabilitiesByProductFamily(String productFamilyId);
+
+    public List<ProductFamilyCapabilityDTO> getProductFamilyCapabilities(String productFamilyId, String capabilityName);
+
+    public List<ProductCapabilityConfigDTO> getCapabilityConfigDetails(String capabilityName, String productFamilyId);
 }

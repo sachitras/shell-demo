@@ -261,6 +261,69 @@ public class SpringShellServiceImpl implements SpringShellService {
         return null;
     }
 
+    @Override
+    public List<ProductFamilyCapabilityDTO> getProductFamilyCapabilitiesByProductFamily(String productFamilyId) {
+        if (productFamilyId != null) {
+            List<ProductFamilyCapabilityDomain> domainList = productFamilyCapabilityRepository.findByProductFamilyId(productFamilyId);
+            if (domainList != null) {
+                List<ProductFamilyCapabilityDTO> dtoList = new ArrayList<>();
+                for (ProductFamilyCapabilityDomain domain : domainList) {
+                    ProductFamilyCapabilityDTO dto = new ProductFamilyCapabilityDTO();
+                    dto.setId(domain.getId());
+                    dto.setProductFamilyId(domain.getProductFamilyId());
+                    dto.setCapabilityName(domain.getCapabilityName());
+                    dto.setRepoURL(domain.getRepoURL());
+                    dtoList.add(dto);
+                }
+                return dtoList;
+
+            }
+
+        }
+        return null;
+    }
+
+    @Override
+    public List<ProductFamilyCapabilityDTO> getProductFamilyCapabilities(String productFamilyId, String capabilityName) {
+        if (productFamilyId != null && capabilityName != null) {
+            List<ProductFamilyCapabilityDomain> domainList = productFamilyCapabilityRepository.findByProductFamilyIdAndCapabilityName(productFamilyId, capabilityName);
+            if (domainList != null) {
+                List<ProductFamilyCapabilityDTO> dtoList = new ArrayList<>();
+                for (ProductFamilyCapabilityDomain domain : domainList) {
+                    ProductFamilyCapabilityDTO dto = new ProductFamilyCapabilityDTO();
+                    dto.setId(domain.getId());
+                    dto.setProductFamilyId(domain.getProductFamilyId());
+                    dto.setCapabilityName(domain.getCapabilityName());
+                    dto.setRepoURL(domain.getRepoURL());
+                    dtoList.add(dto);
+                }
+                return dtoList;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<ProductCapabilityConfigDTO> getCapabilityConfigDetails(String capabilityName, String productFamilyId) {
+       if (capabilityName != null && productFamilyId != null) {
+           List<ProductCapabilityConfigDomain> configDomainList = productCapabilityConfigRepository.findByCapabilityNameAndProductFamilyId(capabilityName, productFamilyId);
+           if (configDomainList != null) {
+               List<ProductCapabilityConfigDTO> dtos = new ArrayList<>();
+               for (ProductCapabilityConfigDomain domain : configDomainList) {
+                   ProductCapabilityConfigDTO dto = new ProductCapabilityConfigDTO();
+                   dto.setId(domain.getId());
+                   dto.setCapabilityName(domain.getCapabilityName());
+                   dto.setProductFamilyId(domain.getProductFamilyId());
+                   dto.setExtensionType(domain.getExtensionType());
+                   dto.setExtURL(domain.getExtURL());
+                   dtos.add(dto);
+               }
+               return  dtos;
+           }
+       }
+        return null;
+    }
+
 
     /****************** Private methods *************************/
 

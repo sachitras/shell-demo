@@ -189,65 +189,57 @@ public class SSHCommand implements CommandMarker {
 		}
 	}
 
-	@CliCommand(value = { "px capability configure"}, help = "Configures the capability")
+	@CliCommand(value = { "px capability configure"}, help = "Configures the capabilities")
 	public void configureCapabilityAPIExt(@CliOption(key = { "capability-name" }, help = "Capability Name") String capabilityName,
 										  @CliOption(key = { "product-family" }, help = "Product Family Id") String productFamilyId,
-									    @CliOption(key = { "api-ext" }, help = "API Extension", mandatory = false) String apiExt) {
-		if (productFamilyId != null && productFamilyId.length() > 1) {
-			LOGGER.info("Configuring the capability...");
-			ProductCapabilityConfigDTO dto = new ProductCapabilityConfigDTO();
-			dto.setId(UUID.randomUUID().toString());
-			dto.setProductFamilyId(productFamilyId);
-			dto.setCapabilityName(capabilityName);
-			dto.setExtensionType("api-ext");
-			dto.setExtURL(apiExt);
-			dto.setCreatedDate(new Date());
+									    @CliOption(key = { "api-ext" }, help = "API Extension") String apiExt,
+										  @CliOption(key = { "adaptor-ext" }, help = "Adaptor Extension") String adaptorExt) {
+		if (productFamilyId != null && productFamilyId.length() > 0 && capabilityName != null && capabilityName.length() > 0) {
+			if (apiExt != null && apiExt.length() > 0) {
+				LOGGER.info("Configuring the capability...");
+				ProductCapabilityConfigDTO dto = new ProductCapabilityConfigDTO();
+				dto.setId(UUID.randomUUID().toString());
+				dto.setProductFamilyId(productFamilyId);
+				dto.setCapabilityName(capabilityName);
+				dto.setExtensionType("api-ext");
+				dto.setExtURL(apiExt);
+				dto.setCreatedDate(new Date());
 
-			boolean flag = shellService.saveProductCapabilityConfig(dto);
-			if (flag) {
-				LOGGER.info("Capability was configured successfully");
-				LOGGER.info("-------------------------------------------------------");
-				LOGGER.info("Product family Id: " + productFamilyId);
-				LOGGER.info("Capability name  : " + capabilityName);
-				LOGGER.info("Extension type   : api-ext");
-				LOGGER.info("Ext URL          : " + apiExt);
+				boolean flag = shellService.saveProductCapabilityConfig(dto);
+				if (flag) {
+					LOGGER.info("Capability was configured successfully");
+					LOGGER.info("-------------------------------------------------------");
+					LOGGER.info("Product family Id: " + productFamilyId);
+					LOGGER.info("Capability name  : " + capabilityName);
+					LOGGER.info("Extension type   : api-ext");
+					LOGGER.info("Ext URL          : " + apiExt);
 
+				}
+			} else if (adaptorExt != null && adaptorExt.length() > 0) {
+				LOGGER.info("Configuring the capability...");
+				ProductCapabilityConfigDTO dto = new ProductCapabilityConfigDTO();
+				dto.setId(UUID.randomUUID().toString());
+				dto.setProductFamilyId(productFamilyId);
+				dto.setCapabilityName(capabilityName);
+				dto.setExtensionType("adaptor-ext");
+				dto.setExtURL(adaptorExt);
+				dto.setCreatedDate(new Date());
+
+				boolean flag = shellService.saveProductCapabilityConfig(dto);
+				if (flag) {
+					LOGGER.info("Capability was configured successfully");
+					LOGGER.info("-------------------------------------------------------");
+					LOGGER.info("Product family Id: " + productFamilyId);
+					LOGGER.info("Capability name  : " + capabilityName);
+					LOGGER.info("Extension type   : adaptor-ext");
+					LOGGER.info("Ext URL          : " + adaptorExt);
+
+				}
 			}
-
 		} else {
 			LOGGER.info("Please enter valid parameters.");
 		}
 	}
-
-//	@CliCommand(value = { "px capability configure"}, help = "Configures the capability")
-//	public void configureCapabilityAdaptorExt(@CliOption(key = { "capability-name" }, help = "Capability Name") String capabilityName,
-//										  @CliOption(key = { "product-family" }, help = "Product Family Id") String productFamilyId,
-//										  @CliOption(key = { "adaptor-ext" }, help = "Adaptor Extension") String adaptorExt) {
-//		if (productFamilyId != null && productFamilyId.length() > 1) {
-//			LOGGER.info("Configuring the capability...");
-//			ProductCapabilityConfigDTO dto = new ProductCapabilityConfigDTO();
-//			dto.setId(UUID.randomUUID().toString());
-//			dto.setProductFamilyId(productFamilyId);
-//			dto.setCapabilityName(capabilityName);
-//			dto.setExtensionType("adaptor-ext");
-//			dto.setExtURL(adaptorExt);
-//			dto.setCreatedDate(new Date());
-//
-//			boolean flag = shellService.saveProductCapabilityConfig(dto);
-//			if (flag) {
-//				LOGGER.info("Capability was configured successfully");
-//				LOGGER.info("-------------------------------------------------------");
-//				LOGGER.info("Product family Id: " + productFamilyId);
-//				LOGGER.info("Capability name  : " + capabilityName);
-//				LOGGER.info("Extension type   : adaptor-ext");
-//				LOGGER.info("Ext URL          : " + adaptorExt);
-//
-//			}
-//
-//		} else {
-//			LOGGER.info("Please enter valid parameters.");
-//		}
-//	}
 
 	@CliCommand(value = { "px tenant list"}, help = "Lists all tenants")
 	public void listAllTenants() {
@@ -311,29 +303,10 @@ public class SSHCommand implements CommandMarker {
 		}
 	}
 
-//	@CliCommand(value = { "px capability list"}, help = "Lists all capabilities")
-//	public void listCapabilities() {
-//		List<ProductCapabilityDTO> dtoList = shellService.getAllCapabilities();
-//		if (dtoList != null) {
-//			LinkedHashMap<String, Object> headers = new LinkedHashMap<>();
-//			headers.put("capabilityId", "Capability Id");
-//			headers.put("capabilityName", "Capability Name");
-//			headers.put("repoURL", "Repository URL");
-//
-//			TableModel model = new BeanListTableModel<>(dtoList, headers);
-//			TableBuilder tableBuilder = new TableBuilder(model);
-//
-//			tableBuilder.addFullBorder(BorderStyle.fancy_light);
-//			String content = tableBuilder.build().render(80);
-//			LOGGER.info(content);
-//		}
-//
-//	}
-
 	@CliCommand(value = { "px capability list"}, help = "Lists all capabilities")
 	public void listCapabilities(@CliOption(key = { "product-family-id" }, help = "Product Family Id") String productFamilyId) {
 		if (productFamilyId != null && productFamilyId.length() > 0) {
-			List<ProductFamilyCapabilityDTO> dtoList = shellService.getProductFamilyCapabilities(productFamilyId);
+			List<ProductFamilyCapabilityDTO> dtoList = shellService.getProductFamilyCapabilitiesByProductFamily(productFamilyId);
 			if (dtoList != null) {
 				List<ProductFamilyCapabilityFTO> ftoList = new ArrayList<>();
 				for (ProductFamilyCapabilityDTO dto : dtoList) {
@@ -373,10 +346,71 @@ public class SSHCommand implements CommandMarker {
 				LOGGER.info(content);
 			}
 		}
-
-
 	}
 
+	@CliCommand(value = { "px tenant describe"}, help = "Describes the tenant for the given tenant id")
+	public void describeTenant(@CliOption(key = { "tenant-id" }, help = "Tenant Id") String tenantId) {
+		if (tenantId != null && tenantId.length() > 0) {
+			TenantDTO tenantDTO = shellService.getTenantById(tenantId);
+			if (tenantDTO != null) {
+				LOGGER.info("---------------------------------------");
+				LOGGER.info("Tenant Id     : " + tenantDTO.getId());
+				LOGGER.info("Tenant Name   : " + tenantDTO.getTenantName());
+			}
+		} else {
+			LOGGER.info("Please enter a valid parameter.");
+		}
+	}
+
+	@CliCommand(value = { "px product-family describe"}, help = "Describes product family for the given product-family id")
+	public void describeProductFamily(@CliOption(key = { "product-family-id" }, help = "Product Family Id") String productFamilyId) {
+		if (productFamilyId != null && productFamilyId.length() > 0) {
+
+			ProductFamilyDTO productFamilyDTO = shellService.getProductFamilyById(productFamilyId);
+			if (productFamilyDTO != null) {
+				LOGGER.info("---------------------------------------");
+				LOGGER.info("Product Family Id    : " + productFamilyDTO.getId());
+				LOGGER.info("Tenant Id            : " + productFamilyDTO.getTenantId());
+				LOGGER.info("Product Family Name  : " + productFamilyDTO.getProductFamilyName());
+				LOGGER.info("Smart Contract Name  : " + productFamilyDTO.getSmartContractName());
+			}
+
+
+		} else {
+			LOGGER.info("Please enter a valid parameter.");
+		}
+	}
+
+	@CliCommand(value = { "px capability describe"}, help = "Describe product family capabilities for given parameters")
+	public void describeCapabilities(@CliOption(key = { "capability-name" }, help = "Capability Name") String capabilityName,
+									 @CliOption(key = { "product-family-id" }, help = "Product Family Id") String productFamilyId) {
+		if (productFamilyId != null && productFamilyId.length() > 0) {
+			if (capabilityName != null && capabilityName.length() > 0) {
+				List<ProductCapabilityConfigDTO> capabilityConfigDTOS = shellService.getCapabilityConfigDetails(capabilityName, productFamilyId);
+				for (ProductCapabilityConfigDTO dto : capabilityConfigDTOS) {
+					LOGGER.info("-------------------------------------------------");
+					LOGGER.info("Product Family Id         : " + dto.getProductFamilyId());
+					LOGGER.info("Capability Name           : " + dto.getCapabilityName());
+					LOGGER.info("Extension Type            : " + dto.getExtensionType());
+					LOGGER.info("Extension URL             : " + dto.getExtURL());
+				}
+
+			} else {
+				LOGGER.info("Please enter a valid parameter.");
+			}
+
+		} else if (capabilityName != null && capabilityName.length() > 0) {
+			ProductCapabilityDTO productCapabilityDTO = shellService.getProductCapabilityByName(capabilityName);
+			if (productCapabilityDTO != null) {
+				LOGGER.info("-------------------------------------------------");
+				LOGGER.info("Capability Id     : " + productCapabilityDTO.getCapabilityId());
+				LOGGER.info("Capability Name   : " + productCapabilityDTO.getCapabilityName());
+			}
+
+		} else {
+			LOGGER.info("Please enter a valid parameter.");
+		}
+	}
 
 
 
