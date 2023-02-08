@@ -8,6 +8,7 @@ import com.example.dto.*;
 import com.example.fto.ProductFamilyCapabilityFTO;
 import com.example.fto.ProductFamilyFTO;
 import com.example.fto.TenantFTO;
+import com.example.remote.RemoteK8Client;
 import com.example.service.SpringShellService;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.shell.Availability;
@@ -30,6 +31,9 @@ public class SSHCommand implements CommandMarker {
 
 	private String vTenantName;
 	private String vProductFamilyName;
+
+	@Autowired
+	private RemoteK8Client k8Client;
 
 
 	private List<String> coreCapabilityList = new ArrayList<>();
@@ -174,15 +178,21 @@ public class SSHCommand implements CommandMarker {
 			dto.setEnvName(env);
 			dto.setCreatedDate(new Date());
 
-			boolean flag = shellService.saveProductFamilyEnv(dto);
-			if (flag) {
-				LOGGER.info("Product family was provisioned successfully.");
-				LOGGER.info("-------------------------------------------------------");
-				LOGGER.info("Product Family :" + productFamilyId);
-				LOGGER.info("Environment    :" + env);
 
+			ProductFamilyDTO productFamilyDTO = shellService.getProductFamilyById(productFamilyId);
+			boolean isNamespaceAvailable = k8Client.isNamespaceAvailable(productFamilyDTO.getProductFamilyName());
+			if (!isNamespaceAvailable) {
+				k8Client.createNamespace(productFamilyDTO.getProductFamilyName());
+				boolean flag = shellService.saveProductFamilyEnv(dto);
+				if (flag) {
+					LOGGER.info("Product family was provisioned successfully.");
+					LOGGER.info("-------------------------------------------------------");
+					LOGGER.info("Product Family :" + productFamilyId);
+					LOGGER.info("Environment    :" + env);
+				}
+			} else {
+				LOGGER.info("Provisioning failed. A namespace is available with the given product family name.");
 			}
-
 
 		} else {
 			LOGGER.info("Please enter valid parameters.");
@@ -205,16 +215,20 @@ public class SSHCommand implements CommandMarker {
 				dto.setExtURL(apiExt);
 				dto.setCreatedDate(new Date());
 
-				boolean flag = shellService.saveProductCapabilityConfig(dto);
-				if (flag) {
-					LOGGER.info("Capability was configured successfully");
-					LOGGER.info("-------------------------------------------------------");
-					LOGGER.info("Product family Id: " + productFamilyId);
-					LOGGER.info("Capability name  : " + capabilityName);
-					LOGGER.info("Extension type   : api-ext");
-					LOGGER.info("Ext URL          : " + apiExt);
+				if (createK8Service(productFamilyId, capabilityName)) {
+					boolean flag = shellService.saveProductCapabilityConfig(dto);
+					if (flag) {
+						LOGGER.info("Capability was configured successfully");
+						LOGGER.info("-------------------------------------------------------");
+						LOGGER.info("Product family Id: " + productFamilyId);
+						LOGGER.info("Capability name  : " + capabilityName);
+						LOGGER.info("Extension type   : api-ext");
+						LOGGER.info("Ext URL          : " + apiExt);
 
+					}
 				}
+
+
 			} else if (adaptorExt != null && adaptorExt.length() > 0) {
 				LOGGER.info("Configuring the capability...");
 				ProductCapabilityConfigDTO dto = new ProductCapabilityConfigDTO();
@@ -225,16 +239,19 @@ public class SSHCommand implements CommandMarker {
 				dto.setExtURL(adaptorExt);
 				dto.setCreatedDate(new Date());
 
-				boolean flag = shellService.saveProductCapabilityConfig(dto);
-				if (flag) {
-					LOGGER.info("Capability was configured successfully");
-					LOGGER.info("-------------------------------------------------------");
-					LOGGER.info("Product family Id: " + productFamilyId);
-					LOGGER.info("Capability name  : " + capabilityName);
-					LOGGER.info("Extension type   : adaptor-ext");
-					LOGGER.info("Ext URL          : " + adaptorExt);
+				if (createK8Service(productFamilyId, capabilityName)) {
+					boolean flag = shellService.saveProductCapabilityConfig(dto);
+					if (flag) {
+						LOGGER.info("Capability was configured successfully");
+						LOGGER.info("-------------------------------------------------------");
+						LOGGER.info("Product family Id: " + productFamilyId);
+						LOGGER.info("Capability name  : " + capabilityName);
+						LOGGER.info("Extension type   : adaptor-ext");
+						LOGGER.info("Ext URL          : " + adaptorExt);
 
+					}
 				}
+
 			}
 		} else {
 			LOGGER.info("Please enter valid parameters.");
@@ -435,6 +452,20 @@ public class SSHCommand implements CommandMarker {
 			return finalString.toString();
 		}
 		return null;
+	}
+
+	private boolean createK8Service(String productFamilyId, String capabilityName) {
+		ProductFamilyDTO productFamilyDTO = shellService.getProductFamilyById(productFamilyId);
+		if (productFamilyDTO != null) {
+			if (!k8Client.isServiceAlreadyAvailable(productFamilyDTO.getProductFamilyName(), capabilityName)) {
+				k8Client.createService(productFamilyDTO.getProductFamilyName(), capabilityName);
+				return true;
+			} else {
+				LOGGER.info("Capability configuration failed. Service is already available in the namespace.");
+			}
+		}
+
+		return false;
 	}
 
 }
