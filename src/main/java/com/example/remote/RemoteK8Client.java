@@ -77,6 +77,24 @@ public class RemoteK8Client {
         return false;
     }
 
+    /**
+     * Corresponding yaml file structure: an example
+     *
+     * apiVersion: v1
+     * kind: Service
+     * metadata:
+     *      name: accounts
+     * spec:
+     *      type: LoadBalancer
+     *      ports:
+     *          - protocol: TCP
+     *            port: 81
+     *            targetPort: 8081
+     *
+     *
+     * @param nameSpaceName
+     * @param serviceName
+     */
     public void createService(String nameSpaceName, String serviceName) {
         if (nameSpaceName != null && serviceName != null) {
             KubernetesClient client = new DefaultKubernetesClient();
