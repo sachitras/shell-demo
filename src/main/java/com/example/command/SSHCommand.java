@@ -217,7 +217,7 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px capability configure"}, help = "Configures the capabilities")
-	public void configureCapabilityAPIExt(@CliOption(key = { "capability-name" }, help = "Capability Name") String capabilityName,
+	public void configureCapabilityAPIExt(@CliOption(key = { "" }, help = "Capability Name") String capabilityName,
 										  @CliOption(key = { "product-family" }, help = "Product Family Id") String productFamilyId,
 									    @CliOption(key = { "api-ext" }, help = "API Extension") String apiExt,
 										  @CliOption(key = { "adaptor-ext" }, help = "Adaptor Extension") String adaptorExt) {
@@ -378,7 +378,7 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px tenant describe"}, help = "Describes the tenant for the given tenant id")
-	public void describeTenant(@CliOption(key = { "tenant-id" }, help = "Tenant Id") String tenantId) {
+	public void describeTenant(@CliOption(key = { "" }, help = "Tenant Id") String tenantId) {
 		if (tenantId != null && tenantId.length() > 0) {
 			TenantDTO tenantDTO = shellService.getTenantById(tenantId);
 			if (tenantDTO != null) {
@@ -392,7 +392,7 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px product-family describe"}, help = "Describes product family for the given product-family id")
-	public void describeProductFamily(@CliOption(key = { "product-family-id" }, help = "Product Family Id") String productFamilyId) {
+	public void describeProductFamily(@CliOption(key = { "" }, help = "Product Family Id") String productFamilyId) {
 		if (productFamilyId != null && productFamilyId.length() > 0) {
 
 			ProductFamilyDTO productFamilyDTO = shellService.getProductFamilyById(productFamilyId);
@@ -411,7 +411,7 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px capability describe"}, help = "Describe product family capabilities for given parameters")
-	public void describeCapabilities(@CliOption(key = { "capability-name" }, help = "Capability Name") String capabilityName,
+	public void describeCapabilities(@CliOption(key = { "" }, help = "Capability Name") String capabilityName,
 									 @CliOption(key = { "product-family-id" }, help = "Product Family Id") String productFamilyId) {
 		if (productFamilyId != null && productFamilyId.length() > 0) {
 			if (capabilityName != null && capabilityName.length() > 0) {
