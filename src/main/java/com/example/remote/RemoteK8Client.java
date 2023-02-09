@@ -5,8 +5,15 @@ import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientBuilder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 @Component
@@ -41,7 +48,6 @@ public class RemoteK8Client {
             List<Namespace> namespaces = namespaceList.getItems();
             if (namespaces != null) {
                 for (Namespace namespace : namespaces) {
-                    System.out.println("Namespace : " + namespace.getMetadata().getName());
                     if (namespaceName.equals(namespace.getMetadata().getName())) {
                         return true;
                     }
@@ -59,7 +65,6 @@ public class RemoteK8Client {
             Namespace namespace = client.namespaces().create(
                     new NamespaceBuilder().withNewMetadata().
                             withName(namespaceName.toLowerCase()).endMetadata().build());
-            System.out.println("Namespace created > " + namespace);
         }
     }
 
@@ -105,6 +110,40 @@ public class RemoteK8Client {
                             .withNewTargetPort(8081).endPort().endSpec().build());
             System.out.println("The new service was created > " + serviceName);
         }
+
+    }
+
+    public void runDeployment(String capabilityName, String namespaceName) {
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            File resource = new File(classLoader.getResource("classpath:kube/"+capabilityName).getFile());
+            if (resource.exists()) {
+                if (resource.isDirectory()) {
+                    File [] files = resource.listFiles();
+                    if (files != null) {
+                        for (File file : files) {
+                            String fileName = file.getName();
+                            if (fileName.endsWith(".yaml") || fileName.endsWith(".yml")) {
+                                InputStream in = new FileInputStream(file);
+                                KubernetesClient client = new DefaultKubernetesClient();
+//                                client.pods().inNamespace(namespaceName).load(in).create();
+                                client.load(in).inNamespace(namespaceName).create();
+//                                Service service = client.services().inNamespace(namespaceName).load(file).create();
+                            }
+                        }
+                    }
+                } else {
+                    System.out.println("Not a directory.");
+                }
+            } else {
+                System.out.println("Deployment file not found.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+
 
     }
 

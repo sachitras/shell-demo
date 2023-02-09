@@ -324,6 +324,28 @@ public class SpringShellServiceImpl implements SpringShellService {
         return null;
     }
 
+    @Override
+    public List<ProductCapabilityConfigDTO> getCapabilityConfigDetails(String productFamilyId) {
+        if (productFamilyId != null) {
+            List<ProductCapabilityConfigDomain> configDomains = productCapabilityConfigRepository.findByProductFamilyId(productFamilyId);
+            if (configDomains != null) {
+                List<ProductCapabilityConfigDTO> dtos = new ArrayList<>();
+                for (ProductCapabilityConfigDomain domain: configDomains) {
+                    ProductCapabilityConfigDTO dto = new ProductCapabilityConfigDTO();
+                    dto.setId(domain.getId());
+                    dto.setCapabilityName(domain.getCapabilityName());
+                    dto.setProductFamilyId(domain.getProductFamilyId());
+                    dto.setExtensionType(domain.getExtensionType());
+                    dto.setExtURL(domain.getExtURL());
+                    dtos.add(dto);
+                }
+                return dtos;
+            }
+        }
+
+        return null;
+    }
+
 
     /****************** Private methods *************************/
 

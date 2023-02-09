@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ProductCapabilityConfigRepository extends JpaRepository<ProductCapabilityConfigDomain, String> {
     public List<ProductCapabilityConfigDomain> findByCapabilityNameAndProductFamilyId(String capabilityName, String productFamilyId);
+
+    public List<ProductCapabilityConfigDomain> findByProductFamilyId(String productFamilyId);
 }
