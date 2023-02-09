@@ -286,7 +286,7 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px product-family list"}, help = "Lists product family for tenant id")
-	public void listProductFamilyForTenantId(@CliOption(key = { "tenant-id" }, help = "Tenant Id") String tenantId) {
+	public void listProductFamilyForTenantId(@CliOption(key = { "tenant" }, help = "Tenant Id") String tenantId) {
 		if (tenantId != null && tenantId.length() > 0) {
 			List<ProductFamilyDTO> dtoList = shellService.getProductFamilyByTenantId(tenantId);
 			if (dtoList != null) {
@@ -321,7 +321,7 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px capability list"}, help = "Lists all capabilities")
-	public void listCapabilities(@CliOption(key = { "product-family-id" }, help = "Product Family Id") String productFamilyId) {
+	public void listCapabilities(@CliOption(key = { "product-family" }, help = "Product Family Id") String productFamilyId) {
 		if (productFamilyId != null && productFamilyId.length() > 0) {
 			List<ProductFamilyCapabilityDTO> dtoList = shellService.getProductFamilyCapabilitiesByProductFamily(productFamilyId);
 			if (dtoList != null) {
