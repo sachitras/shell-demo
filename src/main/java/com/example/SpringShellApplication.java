@@ -20,5 +20,7 @@ public class SpringShellApplication {
 	public static void main(String[] args) throws IOException {
 		SpringApplication.run(SpringShellApplication.class, args);
 		Bootstrap.main(args);
+		// Test comment.
+
 	}
 }
