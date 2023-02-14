@@ -27,12 +27,6 @@ public interface SpringShellService {
 
     public boolean saveCommandEventLog(String commandName, String value, String status);
 
-    public boolean saveTenantProductFamily(TenantProductFamilyDTO dto);
-
-    public boolean saveResourceBundle(ResourceBundleDTO dto);
-
-    public ResourceBundleDTO getResourceBundleByTenantAndProductFamily(String tenantName, String productFamilyName);
-
     public ProductCapabilityDTO getProductCapabilityByName(String capabilityName);
 
     public boolean saveProductFamilyCapability(ProductFamilyCapabilityDTO dto);

@@ -37,12 +37,6 @@ public class SpringShellServiceImpl implements SpringShellService {
     private TenantRepository tenantRepository;
 
     @Autowired
-    private TenantProductFamilyRepository tenantProductFamilyRepository;
-
-    @Autowired
-    private ResourceBundleRepository resourceBundleRepository;
-
-    @Autowired
     private ProductCapabilityRepository capabilityRepository;
 
     @Autowired
@@ -127,32 +121,6 @@ public class SpringShellServiceImpl implements SpringShellService {
         logDTO.setStatus(status);
 
         return saveCommandEventLog(logDTO);
-    }
-
-    @Override
-    public boolean saveTenantProductFamily(TenantProductFamilyDTO dto) {
-        TenantProductFamilyDomain domain = convertTenantProFamilyDTOToDomain(dto);
-        domain = tenantProductFamilyRepository.save(domain);
-        if (domain != null) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean saveResourceBundle(ResourceBundleDTO dto) {
-        ResourceBundleDomain domain = convertResourceBundleDTOToDomain(dto);
-        domain = resourceBundleRepository.save(domain);
-        if (domain != null) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public ResourceBundleDTO getResourceBundleByTenantAndProductFamily(String tenantName, String productFamilyName) {
-        ResourceBundleDomain domain = resourceBundleRepository.findByTenantNameAndProductFamilyName(tenantName, productFamilyName);
-        return convertResourceBundleDomainToDTO(domain);
     }
 
     @Override
@@ -410,46 +378,6 @@ public class SpringShellServiceImpl implements SpringShellService {
             return dto;
         }
 
-        return null;
-    }
-
-    private TenantProductFamilyDomain convertTenantProFamilyDTOToDomain(TenantProductFamilyDTO dto) {
-        if (dto != null) {
-            TenantProductFamilyDomain domain = new TenantProductFamilyDomain();
-            domain.setId(dto.getId());
-            domain.setTenantName(dto.getTenantName());
-            domain.setProductFamilyName(dto.getProductFamilyName());
-            domain.setCreatedDate(dto.getCreatedDate());
-
-            return domain;
-        }
-        return null;
-    }
-
-    private ResourceBundleDomain convertResourceBundleDTOToDomain(ResourceBundleDTO dto) {
-        if (dto != null) {
-            ResourceBundleDomain domain = new ResourceBundleDomain();
-            domain.setId(dto.getId());
-            domain.setTenantName(dto.getTenantName());
-            domain.setProductFamilyName(dto.getProductFamilyName());
-            domain.setCoreCapabilities(dto.getCoreCapabilities());
-            domain.setCreatedDate(dto.getCreatedDate());
-            return domain;
-        }
-        return null;
-    }
-
-    private ResourceBundleDTO convertResourceBundleDomainToDTO(ResourceBundleDomain domain) {
-        if (domain != null) {
-            ResourceBundleDTO dto = new ResourceBundleDTO();
-            dto.setId(domain.getId());
-            dto.setTenantName(domain.getTenantName());
-            dto.setProductFamilyName(domain.getProductFamilyName());
-            dto.setCoreCapabilities(domain.getCoreCapabilities());
-            dto.setCreatedDate(domain.getCreatedDate());
-
-            return dto;
-        }
         return null;
     }
 
