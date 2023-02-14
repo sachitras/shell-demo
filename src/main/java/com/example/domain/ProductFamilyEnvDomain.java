@@ -1,13 +1,10 @@
 package com.example.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "PRODUCT_FAMILY_ENV")
+@Table(name = "PRODUCT_FAMILY_CAPABILITY_ENV")
 public class ProductFamilyEnvDomain {
 
     private String id;

@@ -41,7 +41,7 @@ public class SSHCommand implements CommandMarker {
 	private List<String> coreCapabilityList = new ArrayList<>();
 
 	@CliCommand(value = { "px tenant create"}, help = "Creates a Tenant")
-	public void createTenant(@CliOption(key = { "name" }, help = "Tenant name") String tenantName)  {
+	public void createTenant(@CliOption(key = { "name" }, help = "Tenant name", mandatory = true) String tenantName)  {
 		if (tenantName != null && tenantName.length() > 0) {
 			TenantDTO tenantDTO = shellService.getTenantByName(tenantName);
 			if (tenantDTO == null) {
@@ -83,9 +83,9 @@ public class SSHCommand implements CommandMarker {
 
 	}
 	@CliCommand(value = { "px product-family create"}, help = "Creates a product family")
-	public void createProduct(@CliOption(key = { "name" }, help = "Product family name") String productFamilyName,
-							  @CliOption(key = { "tenant" }, help = "Tenant Id") String tenantId,
-							  @CliOption(key = { "smart-contract" }, help = "Smart Contract") String smartContract)  {
+	public void createProduct(@CliOption(key = { "name" }, help = "Product family name",mandatory = true) String productFamilyName,
+							  @CliOption(key = { "tenant" }, help = "Tenant Id", mandatory = true) String tenantId,
+							  @CliOption(key = { "smart-contract" }, help = "Smart Contract URL") String smartContract)  {
 		if (productFamilyName != null && productFamilyName.length() > 0) {
 			ProductFamilyDTO productFamilyDTO = shellService.getProductFamilyByName(productFamilyName);
 			if (productFamilyDTO == null) {
@@ -139,8 +139,8 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px capability add"}, help = "Adds a capability")
-	public void addCapability(@CliOption(key = { "select" }, help = "Capabilities") String capabilities,
-							  @CliOption(key = { "product-family" }, help = "Product family id") String productFamilyId) {
+	public void addCapability(@CliOption(key = { "select" }, help = "Capabilities separated by commas", mandatory = true) String capabilities,
+							  @CliOption(key = { "product-family" }, help = "Product family id", mandatory = true) String productFamilyId) {
 		if (capabilities != null && capabilities.length() > 0) {
 			LOGGER.info("Adding capabilities to product family...");
 			String[] capabilityArray = capabilities.split(",");
@@ -170,8 +170,8 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px provision"}, help = "Adds a capability")
-	public void provisionProductFamily(@CliOption(key = { "product-family" }, help = "Product Family Id") String productFamilyId,
-							  @CliOption(key = { "env" }, help = "Environment") String env) {
+	public void provisionProductFamily(@CliOption(key = { "product-family" }, help = "Product Family Id", mandatory = true) String productFamilyId,
+							  @CliOption(key = { "env" }, help = "Environment", mandatory = true) String env) {
 		if (productFamilyId != null && productFamilyId.length() > 0) {
 			LOGGER.info("Provisioning product family...");
 			ProductFamilyEnvDTO dto = new ProductFamilyEnvDTO();
@@ -217,10 +217,10 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px capability configure"}, help = "Configures the capabilities")
-	public void configureCapabilityAPIExt(@CliOption(key = { "" }, help = "Capability Name") String capabilityName,
-										  @CliOption(key = { "product-family" }, help = "Product Family Id") String productFamilyId,
-									    @CliOption(key = { "api-ext" }, help = "API Extension") String apiExt,
-										  @CliOption(key = { "adaptor-ext" }, help = "Adaptor Extension") String adaptorExt) {
+	public void configureCapabilityAPIExt(@CliOption(key = { "" }, help = "Capability Name", mandatory = true) String capabilityName,
+										  @CliOption(key = { "product-family" }, help = "Product Family Id", mandatory = true) String productFamilyId,
+									    @CliOption(key = { "api-ext" }, help = "API Extension URL", mandatory = true) String apiExt,
+										  @CliOption(key = { "adaptor-ext" }, help = "Adaptor Extension URL", mandatory = true) String adaptorExt) {
 		if (productFamilyId != null && productFamilyId.length() > 0 && capabilityName != null && capabilityName.length() > 0) {
 			if (apiExt != null && apiExt.length() > 0) {
 				LOGGER.info("Configuring the capability...");
@@ -298,7 +298,7 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px product-family list"}, help = "Lists product family for tenant id")
-	public void listProductFamilyForTenantId(@CliOption(key = { "tenant" }, help = "Tenant Id") String tenantId) {
+	public void listProductFamilyForTenantId(@CliOption(key = { "tenant" }, help = "Tenant Id", mandatory = true) String tenantId) {
 		if (tenantId != null && tenantId.length() > 0) {
 			List<ProductFamilyDTO> dtoList = shellService.getProductFamilyByTenantId(tenantId);
 			if (dtoList != null) {
@@ -333,7 +333,7 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px capability list"}, help = "Lists all capabilities")
-	public void listCapabilities(@CliOption(key = { "product-family" }, help = "Product Family Id") String productFamilyId) {
+	public void listCapabilities(@CliOption(key = { "product-family" }, help = "Product Family Id", mandatory = true) String productFamilyId) {
 		if (productFamilyId != null && productFamilyId.length() > 0) {
 			List<ProductFamilyCapabilityDTO> dtoList = shellService.getProductFamilyCapabilitiesByProductFamily(productFamilyId);
 			if (dtoList != null) {
@@ -378,7 +378,7 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px tenant describe"}, help = "Describes the tenant for the given tenant id")
-	public void describeTenant(@CliOption(key = { "" }, help = "Tenant Id") String tenantId) {
+	public void describeTenant(@CliOption(key = { "" }, help = "Tenant Id", mandatory = true) String tenantId) {
 		if (tenantId != null && tenantId.length() > 0) {
 			TenantDTO tenantDTO = shellService.getTenantById(tenantId);
 			if (tenantDTO != null) {
@@ -392,7 +392,7 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px product-family describe"}, help = "Describes product family for the given product-family id")
-	public void describeProductFamily(@CliOption(key = { "" }, help = "Product Family Id") String productFamilyId) {
+	public void describeProductFamily(@CliOption(key = { "" }, help = "Product Family Id", mandatory = true) String productFamilyId) {
 		if (productFamilyId != null && productFamilyId.length() > 0) {
 
 			ProductFamilyDTO productFamilyDTO = shellService.getProductFamilyById(productFamilyId);
@@ -411,8 +411,8 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px capability describe"}, help = "Describe product family capabilities for given parameters")
-	public void describeCapabilities(@CliOption(key = { "" }, help = "Capability Name") String capabilityName,
-									 @CliOption(key = { "product-family-id" }, help = "Product Family Id") String productFamilyId) {
+	public void describeCapabilities(@CliOption(key = { "" }, help = "Capability Name", mandatory = true) String capabilityName,
+									 @CliOption(key = { "product-family-id" }, help = "Product Family Id", mandatory = true) String productFamilyId) {
 		if (productFamilyId != null && productFamilyId.length() > 0) {
 			if (capabilityName != null && capabilityName.length() > 0) {
 				List<ProductCapabilityConfigDTO> capabilityConfigDTOS = shellService.getCapabilityConfigDetails(capabilityName, productFamilyId);

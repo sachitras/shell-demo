@@ -42,7 +42,7 @@ public class ProductFamilyDomain {
         this.createdDate = createdDate;
     }
 
-    @Column(name = "TENANT_ID", nullable = false, insertable = true, updatable = true, precision = 0)
+    @Column(name = "TENANT_ID")
     public String getTenantId() {
         return tenantId;
     }
@@ -51,7 +51,7 @@ public class ProductFamilyDomain {
         this.tenantId = tenantId;
     }
 
-    @Column(name = "SMART_CONTRACT_NAME", nullable = false, insertable = true, updatable = true, precision = 0)
+    @Column(name = "SMART_CONTRACT_NAME")
     public String getSmartContractName() {
         return smartContractName;
     }
@@ -59,4 +59,5 @@ public class ProductFamilyDomain {
     public void setSmartContractName(String smartContractName) {
         this.smartContractName = smartContractName;
     }
+
 }

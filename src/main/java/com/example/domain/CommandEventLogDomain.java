@@ -1,8 +1,9 @@
 package com.example.domain;
 
+import javax.persistence.*;
 import lombok.Data;
 
-import javax.persistence.*;
+
 
 @Entity
 @Table(name = "SHELL_COMMAND_EVENT_LOG")

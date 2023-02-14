@@ -4,10 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+
 import java.util.Date;
 
 @Entity
-@Table(name = "PRODUCT_CAPABILITY_CONFIG")
+@Table(name = "PRODUCT_FAMILY_CAPABILITY_CONFIG")
 public class ProductCapabilityConfigDomain {
 
     private String id;
