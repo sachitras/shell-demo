@@ -2,22 +2,24 @@ package com.example.service.impl;
 
 import com.example.domain.*;
 import com.example.dto.*;
-import com.example.fto.ProductFamilyCapabilityFTO;
 import com.example.remote.CreateProductFamilyRequest;
 import com.example.remote.CreateProductFamilyResponse;
+import com.example.remote.ProductFamilyPayLoad;
 import com.example.remote.RemoteWebClient;
 import com.example.repository.*;
 import com.example.service.SpringShellService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Service
 @Transactional
@@ -61,10 +63,26 @@ public class SpringShellServiceImpl implements SpringShellService {
 
     @Override
     public boolean sendCommand(CommandInfoDTO dto) {
-        CreateProductFamilyRequest req = new CreateProductFamilyRequest();
-        req.setProductFamilyName(dto.getCommandValue());
-        CreateProductFamilyResponse res = remoteWebClient.createAccount(req);
-        return res.equals("SUCCESS") ?  true : false;
+
+        try {
+
+            ClassLoader classLoader = getClass().getClassLoader();
+            File jsonFile = new File(classLoader.getResource("classpath:tm-request.json").getFile());
+            ObjectMapper objMapper = new ObjectMapper();
+
+
+            ProductFamilyPayLoad payLoad = objMapper.readValue(jsonFile, ProductFamilyPayLoad.class);
+            System.out.println("Request Id:" + payLoad.getRequest_id());
+            payLoad.getProduct_version().setProduct_id(dto.getCommandValue());
+
+
+            CreateProductFamilyResponse res = remoteWebClient.createAccount(payLoad);
+            return res != null ?  true : false;
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override

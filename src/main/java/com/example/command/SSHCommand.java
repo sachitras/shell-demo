@@ -111,12 +111,12 @@ public class SSHCommand implements CommandMarker {
 				shellService.saveProductFamily(dto);
 
 				// Call the external API
-//				CommandInfoDTO infoDTO = new CommandInfoDTO();
-//				infoDTO.setCommandValue(productFamilyName);
-//				boolean flag = shellService.sendCommand(infoDTO);
-//				if (flag) {
-//					LOGGER.info("Request processed successfully.");
-//				}
+				CommandInfoDTO infoDTO = new CommandInfoDTO();
+				infoDTO.setCommandValue(productFamilyName);
+				boolean flag = shellService.sendCommand(infoDTO);
+				if (flag) {
+					LOGGER.info("Request processed successfully.");
+				}
 
 				LOGGER.info("Product family created successfully.");
 				// Save the event log

@@ -1,0 +1,19 @@
+{
+  "request_id": "1676311842",
+  "product_version": {
+    "product_id": "px_savings",
+    "code": "api = \"3.10.0\"\nversion = \"1.0.0\"\ndisplay_name = \"PX savings account\"\nsummary = \"PX savings account\"\ntside = Tside.LIABILITY\n\nfeatures = []\n\nInterestRateShape = NumberShape(\n    kind=NumberKind.PERCENTAGE,\n    min_value=0,\n    max_value=1,\n    step=0.0001\n)\n\nparameters = [\n\n    Parameter(\n        name=\"product_type\",\n        level=Level.INSTANCE,\n        description=\"Product Type as defined by the tenant\",\n        display_name=\"Product Type\",\n        update_permission=UpdatePermission.OPS_EDITABLE,\n        shape=StringShape,\n        default_value=\"PX Silver Savings\",\n    ),\n    Parameter(\n        name=\"interest_rate\",\n        level=Level.INSTANCE,\n        description=\"Interest rate\",\n        display_name=\"Interest rate\",\n        update_permission=UpdatePermission.OPS_EDITABLE,        \n        shape=InterestRateShape,\n        default_value=Decimal(\"0.0125\")\n    ),\n    Parameter(\n        name=\"denomination\",\n        shape=DenominationShape,\n        level=Level.TEMPLATE,\n        description=\"What denomination should the account use?\",\n        display_name=\"Denomination\",\n        update_permission=UpdatePermission.FIXED,\n        default_value=\"USD\"\n    ),\n]\n\n@requires(parameters=True, balances=\"latest\")\ndef pre_posting_code(postings, effective_date):\n    denomination = vault.get_parameter_timeseries(name=\"denomination\").latest()\n\n    # Validate denomination\n    if postings[0].denomination != denomination:\n        raise Rejected(\n            \"Cannot make transactions in given denomination; \"\n            \"transactions must be in {}\".format(denomination),\n            reason_code=RejectedReason.WRONG_DENOMINATION,\n        )",
+    "supported_denominations": ["USD"],
+    "params": [
+      {"name": "denomination", "value": "USD"},
+      {"name": "product_type", "value": "PX Silver Savings"},
+      {"name": "interest_rate", "value": "0.0125"}
+    ],
+    "tags": [],
+    "display_name": "",
+    "description": "",
+    "summary": ""
+  },
+  "is_internal": false,
+  "migration_strategy": "PRODUCT_VERSION_MIGRATION_STRATEGY_UNKNOWN"
+}
