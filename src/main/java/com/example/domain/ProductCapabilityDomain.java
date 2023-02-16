@@ -3,6 +3,7 @@ package com.example.domain;
 import jakarta.persistence.*;
 
 @Entity
+//@IdClass(ProductCapabilityIdClass.class)
 @Table(name = "PRODUCT_CAPABILITY")
 public class ProductCapabilityDomain {
 
@@ -10,7 +11,7 @@ public class ProductCapabilityDomain {
     private String capabilityName;
     private String repoURL;
 
-    @Id
+//    @Id
     @Column(name = "CAPABILITY_ID")
     public String getCapabilityId() {
         return capabilityId;
@@ -20,6 +21,7 @@ public class ProductCapabilityDomain {
         this.capabilityId = capabilityId;
     }
 
+    @Id
     @Column(name = "CAPABILITY_NAME")
     public String getCapabilityName() {
         return capabilityName;
