@@ -17,10 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.table.*;
 import org.springframework.stereotype.Component;
 
 @Component
+@ShellComponent
 public class SSHCommand implements CommandMarker {
 
 	@Autowired
@@ -40,8 +44,10 @@ public class SSHCommand implements CommandMarker {
 
 	private List<String> coreCapabilityList = new ArrayList<>();
 
-	@CliCommand(value = { "px tenant create"}, help = "Creates a Tenant")
-	public void createTenant(@CliOption(key = { "name" }, help = "Tenant name", mandatory = true) String tenantName)  {
+//	@CliCommand(value = { "px tenant create"}, help = "Creates a Tenant")
+	// public void createTenant(@CliOption(key = { "name" }, help = "Tenant name", mandatory = true) String tenantName)
+	@ShellMethod(key = {"px tenant create"})
+	public void createTenant(@ShellOption(value = { "name" }, help = "Tenant name", optOut = true) String tenantName)  {
 		if (tenantName != null && tenantName.length() > 0) {
 			TenantDTO tenantDTO = shellService.getTenantByName(tenantName);
 			if (tenantDTO == null) {
@@ -111,12 +117,14 @@ public class SSHCommand implements CommandMarker {
 				shellService.saveProductFamily(dto);
 
 				// Call the external API
-				CommandInfoDTO infoDTO = new CommandInfoDTO();
-				infoDTO.setCommandValue(productFamilyName);
-				boolean flag = shellService.sendCommand(infoDTO);
-				if (flag) {
-					LOGGER.info("Request processed successfully.");
-				}
+//				CommandInfoDTO infoDTO = new CommandInfoDTO();
+//				infoDTO.setCommandValue(productFamilyName);
+//				boolean flag = shellService.sendCommand(infoDTO);
+//				if (flag) {
+//					LOGGER.info("Request processed successfully.");
+//				}
+
+
 
 				LOGGER.info("Product family created successfully.");
 				// Save the event log
@@ -333,7 +341,7 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px capability list"}, help = "Lists all capabilities")
-	public void listCapabilities(@CliOption(key = { "product-family" }, help = "Product Family Id", mandatory = true) String productFamilyId) {
+	public void listCapabilities(@CliOption(key = { "product-family" }, help = "Product Family Id") String productFamilyId) {
 		if (productFamilyId != null && productFamilyId.length() > 0) {
 			List<ProductFamilyCapabilityDTO> dtoList = shellService.getProductFamilyCapabilitiesByProductFamily(productFamilyId);
 			if (dtoList != null) {

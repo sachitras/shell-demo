@@ -21,7 +21,7 @@ import org.springframework.util.StringUtils;
 public class SpringShellApplication {
 
 	public static void main(String[] args) throws IOException {
-//		SpringApplication.run(SpringShellApplication.class, args);
+		SpringApplication.run(SpringShellApplication.class, args);
 //
 //		String[] disabledCommands = {
 //				"--spring.shell.command.help.enabled=false"};
@@ -30,10 +30,11 @@ public class SpringShellApplication {
 ////		Bootstrap.main(args);
 //		// Test comment.
 
-		String[] disabledCommands = {"--spring.shell.command.help.enabled=false"};
-		String[] fullArgs = StringUtils.concatenateStringArrays(args, disabledCommands);
-		SpringApplication.run(SpringShellApplication.class, fullArgs);
+//		String[] disabledCommands = {"--spring.shell.command.help.enabled=false"};
+//		String[] fullArgs = StringUtils.concatenateStringArrays(args, disabledCommands);
+//		SpringApplication.run(SpringShellApplication.class, fullArgs);
 		Bootstrap.main(args);
+		
 
 	}
 }
