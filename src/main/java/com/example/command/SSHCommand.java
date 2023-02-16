@@ -1,31 +1,28 @@
 package com.example.command;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Logger;
-
 import com.example.dto.*;
 import com.example.fto.ProductFamilyCapabilityFTO;
 import com.example.fto.ProductFamilyFTO;
 import com.example.fto.TenantFTO;
 import com.example.remote.RemoteK8Client;
 import com.example.service.SpringShellService;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
-import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.shell.Availability;
-import org.springframework.shell.core.CommandMarker;
-import org.springframework.shell.core.annotation.CliCommand;
-import org.springframework.shell.core.annotation.CliOption;
+//import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.shell.table.*;
+import org.springframework.shell.table.BeanListTableModel;
+import org.springframework.shell.table.BorderStyle;
+import org.springframework.shell.table.TableBuilder;
+import org.springframework.shell.table.TableModel;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
+import java.util.logging.Logger;
 
 @Component
 @ShellComponent
-public class SSHCommand implements CommandMarker {
+public class SSHCommand {
 
 	@Autowired
 	private SpringShellService shellService;
@@ -297,7 +294,7 @@ public class SSHCommand implements CommandMarker {
 			TableModel model = new BeanListTableModel<>(ftoList, headers);
 			TableBuilder tableBuilder = new TableBuilder(model);
 
-			tableBuilder.addFullBorder(BorderStyle.fancy_light);
+			tableBuilder.addFullBorder(BorderStyle.oldschool);
 			String content = tableBuilder.build().render(80);
 			LOGGER.info(content);
 

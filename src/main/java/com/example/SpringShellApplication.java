@@ -1,18 +1,13 @@
 package com.example;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.shell.Bootstrap;
-import org.springframework.util.StringUtils;
+//import org.springframework.shell.Bootstrap;
+
+import java.io.IOException;
 
 @SpringBootApplication
 @EnableAutoConfiguration
@@ -33,7 +28,7 @@ public class SpringShellApplication {
 //		String[] disabledCommands = {"--spring.shell.command.help.enabled=false"};
 //		String[] fullArgs = StringUtils.concatenateStringArrays(args, disabledCommands);
 //		SpringApplication.run(SpringShellApplication.class, fullArgs);
-		Bootstrap.main(args);
+//		Bootstrap.main(args);
 		
 
 	}
