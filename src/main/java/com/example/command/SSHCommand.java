@@ -113,10 +113,10 @@ public class SSHCommand implements CommandMarker {
 				// Call the external API
 				CommandInfoDTO infoDTO = new CommandInfoDTO();
 				infoDTO.setCommandValue(productFamilyName);
-				boolean flag = shellService.sendCommand(infoDTO);
-				if (flag) {
-					LOGGER.info("Request processed successfully.");
-				}
+//				boolean flag = shellService.sendCommand(infoDTO);
+//				if (flag) {
+//					LOGGER.info("Request processed successfully.");
+//				}
 
 				LOGGER.info("Product family created successfully.");
 				// Save the event log
@@ -333,7 +333,7 @@ public class SSHCommand implements CommandMarker {
 	}
 
 	@CliCommand(value = { "px capability list"}, help = "Lists all capabilities")
-	public void listCapabilities(@CliOption(key = { "product-family" }, help = "Product Family Id", mandatory = true) String productFamilyId) {
+	public void listCapabilities(@CliOption(key = { "product-family" }, help = "Product Family Id") String productFamilyId) {
 		if (productFamilyId != null && productFamilyId.length() > 0) {
 			List<ProductFamilyCapabilityDTO> dtoList = shellService.getProductFamilyCapabilitiesByProductFamily(productFamilyId);
 			if (dtoList != null) {

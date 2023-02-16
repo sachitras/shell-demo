@@ -64,24 +64,24 @@ public class SpringShellServiceImpl implements SpringShellService {
     @Override
     public boolean sendCommand(CommandInfoDTO dto) {
 
-        try {
+//        try {
 
             ClassLoader classLoader = getClass().getClassLoader();
             File jsonFile = new File(classLoader.getResource("classpath:tm-request.json").getFile());
             ObjectMapper objMapper = new ObjectMapper();
 
 
-            ProductFamilyPayLoad payLoad = objMapper.readValue(jsonFile, ProductFamilyPayLoad.class);
-            System.out.println("Request Id:" + payLoad.getRequest_id());
-            payLoad.getProduct_version().setProduct_id(dto.getCommandValue());
+//            ProductFamilyPayLoad payLoad = objMapper.readValue(jsonFile, ProductFamilyPayLoad.class);
+//            System.out.println("Request Id:" + payLoad.getRequest_id());
+//            payLoad.getProduct_version().setProduct_id(dto.getCommandValue());
 
 
-            CreateProductFamilyResponse res = remoteWebClient.createAccount(payLoad);
-            return res != null ?  true : false;
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//            CreateProductFamilyResponse res = remoteWebClient.createAccount(payLoad);
+//            return res != null ?  true : false;
+            return true;
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
     }
 
