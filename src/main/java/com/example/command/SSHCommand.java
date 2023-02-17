@@ -46,7 +46,7 @@ public class SSHCommand {
 		if (tenantName != null && tenantName.length() > 0) {
 			TenantDTO tenantDTO = shellService.getTenantByName(tenantName);
 			if (tenantDTO == null) {
-				LOGGER.info("Creating tenant " + tenantName + " ...");
+				System.out.println("Creating tenant " + tenantName + " ...");
 				try {
 					Thread.sleep(4000);
 				} catch (Exception e) {}
@@ -60,25 +60,25 @@ public class SSHCommand {
 				tenant.setCreatedDate(new Date());
 				boolean flag = shellService.saveTenant(tenant);
 				if(flag) {
-					LOGGER.info("Tenant created successfully.");
+					System.out.println("Tenant created successfully.");
 				}
 
 				// Save the event log
 				shellService.saveCommandEventLog("create-tenant --name", tenantName, "Completed");
 
 				TenantDTO savedTenant = shellService.getTenantById(tenant.getId());
-				LOGGER.info("-------------------------------------------------------");
-				LOGGER.info("Tenant ID   : " + savedTenant.getId());
-				LOGGER.info("Tenant Name :" + savedTenant.getTenantName());
+				System.out.println("-------------------------------------------------------");
+				System.out.println("Tenant ID   : " + savedTenant.getId());
+				System.out.println("Tenant Name :" + savedTenant.getTenantName());
 
 				tenantCreated = true;
 				vTenantName = tenantName;
 			} else {
-				LOGGER.info("Tenant already exists. Please give a different tenant name.");
+				System.out.println("Tenant already exists. Please give a different tenant name.");
 			}
 
 		} else {
-			LOGGER.info("Please enter a valid tenant name");
+			System.out.println("Please enter a valid tenant name");
 		}
 
 
@@ -91,7 +91,7 @@ public class SSHCommand {
 		if (productFamilyName != null && productFamilyName.length() > 0) {
 			ProductFamilyDTO productFamilyDTO = shellService.getProductFamilyByName(productFamilyName);
 			if (productFamilyDTO == null) {
-				LOGGER.info("Creating product family " + productFamilyName + " ...");
+				System.out.println("Creating product family " + productFamilyName + " ...");
 				try {
 					Thread.sleep(4000);
 				} catch (Exception e) {}
@@ -117,28 +117,28 @@ public class SSHCommand {
 //				infoDTO.setCommandValue(productFamilyName);
 //				boolean flag = shellService.sendCommand(infoDTO);
 //				if (flag) {
-//					LOGGER.info("Request processed successfully.");
+//					System.out.println("Request processed successfully.");
 //				}
 
 
 
-				LOGGER.info("Product family created successfully.");
+				System.out.println("Product family created successfully.");
 				// Save the event log
 				shellService.saveCommandEventLog("create-product-family --name", productFamilyName, "Completed");
 
 				ProductFamilyDTO savedDTO = shellService.getProductFamilyById(dto.getId());
-				LOGGER.info("-------------------------------------------------------");
-				LOGGER.info("Product Family ID   :" + savedDTO.getId());
-				LOGGER.info("Product Family Name :" + savedDTO.getProductFamilyName());
-				LOGGER.info("Tenant Id           :" + savedDTO.getTenantId());
-				LOGGER.info("Smart Contract      :" + savedDTO.getSmartContractName());
+				System.out.println("-------------------------------------------------------");
+				System.out.println("Product Family ID   :" + savedDTO.getId());
+				System.out.println("Product Family Name :" + savedDTO.getProductFamilyName());
+				System.out.println("Tenant Id           :" + savedDTO.getTenantId());
+				System.out.println("Smart Contract      :" + savedDTO.getSmartContractName());
 
 			} else {
-				LOGGER.info("Product family already exists. Please give a different product family name.");
+				System.out.println("Product family already exists. Please give a different product family name.");
 			}
 
 		} else {
-			LOGGER.info("Please enter a valid product family");
+			System.out.println("Please enter a valid product family");
 		}
 	}
 
@@ -146,7 +146,7 @@ public class SSHCommand {
 	public void addCapability(@ShellOption(value = { "select" }, help = "Capabilities separated by commas", optOut = true) String capabilities,
 							  @ShellOption(value = { "product-family" }, help = "Product family id", optOut = true) String productFamilyId) {
 		if (capabilities != null && capabilities.length() > 0) {
-			LOGGER.info("Adding capabilities to product family...");
+			System.out.println("Adding capabilities to product family...");
 			String[] capabilityArray = capabilities.split(",");
 			List<String> capabilityList = Arrays.asList(capabilityArray);
 			for (String capability: capabilityList) {
@@ -162,13 +162,13 @@ public class SSHCommand {
 				}
 				shellService.saveProductFamilyCapability(capabilityDTO);
 			}
-			LOGGER.info("Product family capabilities were added.");
-			LOGGER.info("-------------------------------------------------------");
-			LOGGER.info("Product Family ID :" + productFamilyId);
-			LOGGER.info("Capabilities      :" + capabilities);
+			System.out.println("Product family capabilities were added.");
+			System.out.println("-------------------------------------------------------");
+			System.out.println("Product Family ID :" + productFamilyId);
+			System.out.println("Capabilities      :" + capabilities);
 
 		} else {
-			LOGGER.info("Please enter a valid core capability");
+			System.out.println("Please enter a valid core capability");
 		}
 
 	}
@@ -177,7 +177,7 @@ public class SSHCommand {
 	public void provisionProductFamily(@ShellOption(value = { "product-family" }, help = "Product Family Id", optOut = true) String productFamilyId,
 							  @ShellOption(value = { "env" }, help = "Environment", optOut = true) String env) {
 		if (productFamilyId != null && productFamilyId.length() > 0) {
-			LOGGER.info("Provisioning product family...");
+			System.out.println("Provisioning product family...");
 			ProductFamilyEnvDTO dto = new ProductFamilyEnvDTO();
 			dto.setId(UUID.randomUUID().toString());
 			dto.setProductFamilyId(productFamilyId);
@@ -190,33 +190,33 @@ public class SSHCommand {
 			delay(3000);
 
 			if (!isNamespaceAvailable) {
-				LOGGER.info("Creating namespace " + productFamilyDTO.getProductFamilyName() + "...");
+				System.out.println("Creating namespace " + productFamilyDTO.getProductFamilyName() + "...");
 				delay(3000);
 				k8Client.createNamespace(productFamilyDTO.getProductFamilyName());
-				LOGGER.info("Namespace created.");
+				System.out.println("Namespace created.");
 				isNamespaceAvailable = true;
 
 			} else {
-				LOGGER.info("Namespace already exists.");
+				System.out.println("Namespace already exists.");
 			}
 
 			if (isNamespaceAvailable) {
 				delay(3000);
-				LOGGER.info("Deploying services...");
+				System.out.println("Deploying services...");
 				createK8Services(productFamilyId);
 				boolean flag = shellService.saveProductFamilyEnv(dto);
 				if (flag) {
-					LOGGER.info("Product family was provisioned successfully.");
-					LOGGER.info("-------------------------------------------------------");
-					LOGGER.info("Product Family :" + productFamilyId);
-					LOGGER.info("Environment    :" + env);
+					System.out.println("Product family was provisioned successfully.");
+					System.out.println("-------------------------------------------------------");
+					System.out.println("Product Family :" + productFamilyId);
+					System.out.println("Environment    :" + env);
 				}
 				delay(3000);
-				LOGGER.info("Services deployed successfully.");
+				System.out.println("Services deployed successfully.");
 			}
 
 		} else {
-			LOGGER.info("Please enter valid parameters.");
+			System.out.println("Please enter valid parameters.");
 		}
 	}
 
@@ -227,7 +227,7 @@ public class SSHCommand {
 										  @ShellOption(value = { "adaptor-ext" }, help = "Adaptor Extension URL", optOut = true) String adaptorExt) {
 		if (productFamilyId != null && productFamilyId.length() > 0 && capabilityName != null && capabilityName.length() > 0) {
 			if (apiExt != null && apiExt.length() > 0) {
-				LOGGER.info("Configuring the capability...");
+				System.out.println("Configuring the capability...");
 				ProductCapabilityConfigDTO dto = new ProductCapabilityConfigDTO();
 				dto.setId(UUID.randomUUID().toString());
 				dto.setProductFamilyId(productFamilyId);
@@ -238,17 +238,17 @@ public class SSHCommand {
 
 				boolean flag = shellService.saveProductCapabilityConfig(dto);
 				if (flag) {
-					LOGGER.info("Capability was configured successfully");
-					LOGGER.info("-------------------------------------------------------");
-					LOGGER.info("Product family Id: " + productFamilyId);
-					LOGGER.info("Capability name  : " + capabilityName);
-					LOGGER.info("Extension type   : api-ext");
-					LOGGER.info("Ext URL          : " + apiExt);
+					System.out.println("Capability was configured successfully");
+					System.out.println("-------------------------------------------------------");
+					System.out.println("Product family Id: " + productFamilyId);
+					System.out.println("Capability name  : " + capabilityName);
+					System.out.println("Extension type   : api-ext");
+					System.out.println("Ext URL          : " + apiExt);
 
 				}
 
 			} else if (adaptorExt != null && adaptorExt.length() > 0) {
-				LOGGER.info("Configuring the capability...");
+				System.out.println("Configuring the capability...");
 				ProductCapabilityConfigDTO dto = new ProductCapabilityConfigDTO();
 				dto.setId(UUID.randomUUID().toString());
 				dto.setProductFamilyId(productFamilyId);
@@ -259,18 +259,18 @@ public class SSHCommand {
 
 				boolean flag = shellService.saveProductCapabilityConfig(dto);
 				if (flag) {
-					LOGGER.info("Capability was configured successfully");
-					LOGGER.info("-------------------------------------------------------");
-					LOGGER.info("Product family Id: " + productFamilyId);
-					LOGGER.info("Capability name  : " + capabilityName);
-					LOGGER.info("Extension type   : adaptor-ext");
-					LOGGER.info("Ext URL          : " + adaptorExt);
+					System.out.println("Capability was configured successfully");
+					System.out.println("-------------------------------------------------------");
+					System.out.println("Product family Id: " + productFamilyId);
+					System.out.println("Capability name  : " + capabilityName);
+					System.out.println("Extension type   : adaptor-ext");
+					System.out.println("Ext URL          : " + adaptorExt);
 
 				}
 
 			}
 		} else {
-			LOGGER.info("Please enter valid parameters.");
+			System.out.println("Please enter valid parameters.");
 		}
 	}
 
@@ -296,7 +296,7 @@ public class SSHCommand {
 
 			tableBuilder.addFullBorder(BorderStyle.oldschool);
 			String content = tableBuilder.build().render(80);
-			LOGGER.info(content);
+			System.out.println(content);
 
 		}
 	}
@@ -328,11 +328,11 @@ public class SSHCommand {
 
 				tableBuilder.addFullBorder(BorderStyle.fancy_light);
 				String content = tableBuilder.build().render(80);
-				LOGGER.info(content);
+				System.out.println(content);
 
 			}
 		} else {
-			LOGGER.info("Please enter a valid parameter.");
+			System.out.println("Please enter a valid parameter.");
 		}
 	}
 
@@ -361,7 +361,7 @@ public class SSHCommand {
 
 				tableBuilder.addFullBorder(BorderStyle.fancy_light);
 				String content = tableBuilder.build().render(80);
-				LOGGER.info(content);
+				System.out.println(content);
 			}
 		} else {
 			List<ProductCapabilityDTO> dtoList = shellService.getAllCapabilities();
@@ -376,7 +376,7 @@ public class SSHCommand {
 
 				tableBuilder.addFullBorder(BorderStyle.fancy_light);
 				String content = tableBuilder.build().render(80);
-				LOGGER.info(content);
+				System.out.println(content);
 			}
 		}
 	}
@@ -386,12 +386,12 @@ public class SSHCommand {
 		if (tenantId != null && tenantId.length() > 0) {
 			TenantDTO tenantDTO = shellService.getTenantById(tenantId);
 			if (tenantDTO != null) {
-				LOGGER.info("---------------------------------------");
-				LOGGER.info("Tenant Id     : " + tenantDTO.getId());
-				LOGGER.info("Tenant Name   : " + tenantDTO.getTenantName());
+				System.out.println("---------------------------------------");
+				System.out.println("Tenant Id     : " + tenantDTO.getId());
+				System.out.println("Tenant Name   : " + tenantDTO.getTenantName());
 			}
 		} else {
-			LOGGER.info("Please enter a valid parameter.");
+			System.out.println("Please enter a valid parameter.");
 		}
 	}
 
@@ -401,16 +401,16 @@ public class SSHCommand {
 
 			ProductFamilyDTO productFamilyDTO = shellService.getProductFamilyById(productFamilyId);
 			if (productFamilyDTO != null) {
-				LOGGER.info("---------------------------------------");
-				LOGGER.info("Product Family Id    : " + productFamilyDTO.getId());
-				LOGGER.info("Tenant Id            : " + productFamilyDTO.getTenantId());
-				LOGGER.info("Product Family Name  : " + productFamilyDTO.getProductFamilyName());
-				LOGGER.info("Smart Contract Name  : " + productFamilyDTO.getSmartContractName());
+				System.out.println("---------------------------------------");
+				System.out.println("Product Family Id    : " + productFamilyDTO.getId());
+				System.out.println("Tenant Id            : " + productFamilyDTO.getTenantId());
+				System.out.println("Product Family Name  : " + productFamilyDTO.getProductFamilyName());
+				System.out.println("Smart Contract Name  : " + productFamilyDTO.getSmartContractName());
 			}
 
 
 		} else {
-			LOGGER.info("Please enter a valid parameter.");
+			System.out.println("Please enter a valid parameter.");
 		}
 	}
 
@@ -421,30 +421,34 @@ public class SSHCommand {
 			if (capabilityName != null && capabilityName.length() > 0) {
 				List<ProductCapabilityConfigDTO> capabilityConfigDTOS = shellService.getCapabilityConfigDetails(capabilityName, productFamilyId);
 				for (ProductCapabilityConfigDTO dto : capabilityConfigDTOS) {
-					LOGGER.info("-------------------------------------------------");
-					LOGGER.info("Product Family Id         : " + dto.getProductFamilyId());
-					LOGGER.info("Capability Name           : " + dto.getCapabilityName());
-					LOGGER.info("Extension Type            : " + dto.getExtensionType());
-					LOGGER.info("Extension URL             : " + dto.getExtURL());
+					System.out.println("-------------------------------------------------");
+					System.out.println("Product Family Id         : " + dto.getProductFamilyId());
+					System.out.println("Capability Name           : " + dto.getCapabilityName());
+					System.out.println("Extension Type            : " + dto.getExtensionType());
+					System.out.println("Extension URL             : " + dto.getExtURL());
 				}
 
 			} else {
-				LOGGER.info("Please enter a valid parameter.");
+				System.out.println("Please enter a valid parameter.");
 			}
 
 		} else if (capabilityName != null && capabilityName.length() > 0) {
 			ProductCapabilityDTO productCapabilityDTO = shellService.getProductCapabilityByName(capabilityName);
 			if (productCapabilityDTO != null) {
-				LOGGER.info("-------------------------------------------------");
-				LOGGER.info("Capability Id     : " + productCapabilityDTO.getCapabilityId());
-				LOGGER.info("Capability Name   : " + productCapabilityDTO.getCapabilityName());
+				System.out.println("-------------------------------------------------");
+				System.out.println("Capability Id     : " + productCapabilityDTO.getCapabilityId());
+				System.out.println("Capability Name   : " + productCapabilityDTO.getCapabilityName());
 			}
 
 		} else {
-			LOGGER.info("Please enter a valid parameter.");
+			System.out.println("Please enter a valid parameter.");
 		}
 	}
 
+	@ShellMethod(key = { "exit"})
+	public void exit() {
+		System.exit(0);
+	}
 
 
 
